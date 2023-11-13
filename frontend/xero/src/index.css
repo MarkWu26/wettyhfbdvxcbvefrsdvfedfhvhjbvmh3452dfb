@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body{
+  @apply bg-[#f3f4f5]
+}
+
