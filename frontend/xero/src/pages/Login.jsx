@@ -1,6 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios'
+
+axios.defaults.baseURL = 'http://localhost:5000'
 
 const Login = () => {
+
+  const [xeroUrl, setXeroUrl] = useState('');
+
+  useEffect(()=>{
+    const fetchXeroUrl = async () =>{
+      try{
+        const response = await axios.get('/')
+        console.log('the url is: ', response.data.xeroUrl);
+        setXeroUrl(response.data.xeroUrl);
+      }
+      catch(error){
+        console.log(error)
+      }
+    }
+
+    fetchXeroUrl();
+  }, [])
+
+  const handleSignIn = () =>{
+    console.log('okay');
+    window.open(xeroUrl, 'authWindow', 'width=800, height=700')
+  }
+
+
   return (
     <div className="flex h-screen w-screen flex-row">
       {/* left side */}
@@ -49,7 +76,9 @@ const Login = () => {
             </div>
 
             <div className="mt-16">
-              <button className="flex items-center justify-center w-full bg-[#25a767] text-white py-3 rounded-[5px] hover:opacity-90 text-base" >Sign In</button>
+              <a className="flex items-center justify-center w-full bg-[#25a767] text-white py-3 rounded-[5px] hover:opacity-90 text-base" 
+              href={xeroUrl}
+              >Sign In</a>
             </div>
 
            
