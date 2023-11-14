@@ -15,14 +15,14 @@ const DataManager = () => {
         <div className='mb-5 flex flex-row items-center justify-between'>
         <Searchbar/>
         <div className='flex flex-row gap-x-4'>
-            <div className='flex-row gap-x-2'>
-                <p>Data Source <span>All</span></p>
+            <div className='flex-row'>
+                <p className='text-[#8e929b]'>Data Source <span className='text-black ml-2'>All</span></p>
             </div>
             <div className='flex-row gap-x-2'>
-                <p>Created by <span>Everyone</span></p>
+                <p className='text-[#8e929b]'>Created by <span className='text-black ml-2'>Everyone</span></p>
             </div>
             <div className='flex-row gap-x-2'>
-                <p>Status<span>All</span></p>
+                <p className='text-[#8e929b]'>Status <span className='text-black ml-2'>All</span></p>
             </div>
         </div>
         </div>

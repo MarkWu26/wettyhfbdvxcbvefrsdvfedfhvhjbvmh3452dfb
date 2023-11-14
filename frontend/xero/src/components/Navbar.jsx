@@ -7,7 +7,7 @@ const Navbar = () => {
         <div className='flex flex-row gap-x-8 items-center'>
             <h2 className='text-xl font-[500]'>Data Manager</h2>
             <h4 className='text-sm'>DATA SOURCE CONNECTIONS 2</h4>
-            <h4 className='text-sm'>AVAILABLE INTEGRATIONS</h4>
+            <h4 className='text-sm text-[#8e929b]'>AVAILABLE INTEGRATIONS</h4>
         </div>
         <div>
             <button className='bg-[#25a767] text-white px-5 py-1 rounded-[5px]'>New Connection</button>
