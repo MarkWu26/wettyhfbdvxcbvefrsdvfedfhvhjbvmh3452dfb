@@ -4,7 +4,7 @@ import Context from '../stateContext/Context'
 const Navbar = () => {
   const {isDataSource, setIsDataSource} = useContext(Context)
   return (
-    <div className='bg-white w-screen h-[60px] absolute top-0 ml-[60px] overflow-hidden'>
+    <div className='bg-white w-full h-[60px] top-0 pl-[60px] overflow-hidden'>
     <div className='flex justify-between px-[52px] items-center h-full' >
         <div className='flex flex-row gap-x-8 items-center'>
             <h2 className='text-xl font-[500]'>Data Manager</h2>
