@@ -1,13 +1,33 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import TableList from "../components/TableList";
 import Searchbar from "../components/Searchbar";
 import Context from "../stateContext/Context";
 import Integrations from "../components/Integrations";
+import axios from "axios";
 
 const DataManager = () => {
+
+  useEffect(()=>{
+    const fetchAuth = async () => {
+      try {
+        console.log('sending')
+        const response = await axios.get('http://localhost:5000/getAllMetrics', 
+        { withCredentials: true }
+        );
+        console.log('fetch: ', response.data);
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchAuth();
+  }, [])
+
   const { isDataSource } = useContext(Context);
+
+
   return (
     <div className="overflow-hidden overflow-y-hidden">
       <Sidebar />

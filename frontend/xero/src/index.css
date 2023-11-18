@@ -7,3 +7,11 @@ body{
   @apply bg-[#f3f4f5]
 }
 
+.text-secondary{
+  @apply text-[#8e929b]
+}
+
+.main-bg{
+  @apply bg-[#f3f4f5]
+}
+

@@ -10,7 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "@nivo/api": "^0.74.1",
+    "@nivo/radar": "^0.83.1",
     "axios": "^1.6.1",
+    "lodash.isequal": "^4.5.0",
+    "nivo": "^0.31.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
