@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  user_id      Int    @id @default(autoincrement())
+  first_name   String @db.VarChar(50)
+  last_name    String @db.VarChar(50)
+  company_name String @db.VarChar(60)
+  email        String @db.VarChar(60)
+  password     String @db.VarChar(50)
+}
+
+model account_mapping {
+  account_mapping_id  Int    @id @default(autoincrement())
+  account_id          Int
+  code                String @db.VarChar(30)
+  name                String @db.VarChar(60)
+  status              String @db.VarChar(50)
+  type                String @db.VarChar(40)
+  bank_acc_number     Int
+  bank_acc_type       String @db.VarChar(40)
+  currency_code       String @db.VarChar(20)
+  reporting_code_name String @db.VarChar(30)
+}
+
+model external_system {
+  system_id   Int    @id @default(autoincrement())
+  name        String @db.VarChar(45)
+  description String @db.VarChar(225)
+}
+
+model metric_formula {
+  formula_id   Int    @id @default(autoincrement())
+  metric_name  String @db.VarChar(255)
+  system_id    Int
+  api_endpoint String @db.VarChar(255)
+}
+
+model radar_chart {
+  metrics_id              Int    @id @default(autoincrement())
+  entity                  String @db.VarChar(50)
+  cashflow_ratio          Float  @db.Float
+  gross_profit_margin     Float  @db.Float
+  liquidity_current_ratio Float  @db.Float
+  liquidity_quick_ratio   Float  @db.Float
+  days_receivable         Float  @db.Float
+  days_payable            Float  @db.Float
+  days_inventory          Float  @db.Float
+  interest_cover          Float  @db.Float
+}
+
+model metric {
+  metric_name String @id @db.VarChar(255)
+  description Int
+  metric_type String @db.VarChar(20)
+  about       String @db.Text
+}
+
+model user_saved_metrics {
+  id          Int     @id @default(autoincrement())
+  metric_name String  @db.VarChar(255)
+  value       String? @db.VarChar(255)
+  value2      String? @db.VarChar(255)
+}
