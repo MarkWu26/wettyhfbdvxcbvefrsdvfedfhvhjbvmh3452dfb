@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import TableList from "../components/TableList";
@@ -8,22 +8,23 @@ import Integrations from "../components/Integrations";
 import axios from "axios";
 
 const DataManager = () => {
+  const [xeroUrl, setXeroUrl] = useState('');
 
   useEffect(()=>{
-    const fetchAuth = async () => {
-      try {
-        console.log('sending')
-        const response = await axios.get('http://localhost:5000/getAllMetrics', 
-        { withCredentials: true }
-        );
-        console.log('fetch: ', response.data);
-
-      } catch (error) {
+    const fetchXeroUrl = async () =>{
+      try{
+        const response = await axios.get('/')
+        console.log('the url is: ', response.data.xeroUrl);
+        setXeroUrl(response.data.xeroUrl);
+      }
+      catch(error){
         console.log(error)
       }
     }
-    fetchAuth();
+
+    fetchXeroUrl();
   }, [])
+
 
   const { isDataSource } = useContext(Context);
 
@@ -31,7 +32,7 @@ const DataManager = () => {
   return (
     <div className="overflow-hidden overflow-y-hidden">
       <Sidebar />
-      <Navbar />
+      <Navbar url={xeroUrl}/>
       {/* Body */}
       <div className="mt-[30px] ml-[70px] py-5 px-12">
         {/* Search */}

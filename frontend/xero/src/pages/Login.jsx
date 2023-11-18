@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios'
+import image from '../assets/image.webp'
 
 axios.defaults.baseURL = 'http://localhost:5000'
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
   const [xeroUrl, setXeroUrl] = useState('');
 
-  useEffect(()=>{
+  /* useEffect(()=>{
     const fetchXeroUrl = async () =>{
       try{
         const response = await axios.get('/')
@@ -20,7 +22,9 @@ const Login = () => {
     }
 
     fetchXeroUrl();
-  }, [])
+  }, []) */
+
+  const navigate = useNavigate()
 
   const handleSignIn = () =>{
     console.log('okay');
@@ -35,17 +39,22 @@ const Login = () => {
         <div className="container w-full flex py-[60px] px-[36px] items-center justify-center flex-row">
           <div className="ml-[250px] w-[355px] flex-col gap-y-32">
           <div className="max-w-[230px]">
-            <img src="https://cdnwebsite.databox.com/wp-content/uploads/2023/10/05033210/generative-AI_login.png"/>
+            <img src={image}/>
           </div>
-          <div className="text-[10px] text-[#8e929b] mt-4">
-            WHAT'S NEW
-          </div>
-          <div className=" text-[28px] text-[#292929] mt-4 font-[500]">
-          New in Databox: Get Personalized, Actionable Insights With AI-powered Performance Summaries
+         
+          <div className=" text-[20px] text-[#292929] mt-4 font-[500]">
+          <span className="mb-4">Don’t just pay it. Clear it.</span> <br className="mb-4"/>
+
+
+Our Fintech solution empowers small and medium enterprises to save time, money and free up working capital by helping them settle their B2B invoices with minimal or no cash payments.
+Our Cashflow Moniitor allows SMEs to keep track of their cashflow by monitoring 8 different metrics and compare against benchmarks.
           </div>
           {/* Button */}
           <div className="mt-4">
-            <button className="px-[48px] py-2 bg-[#fff] hover:text-[#292929] rounded-[5px] text-[#8e929b] shadow-md">Read more</button>
+            <a className="px-[48px] py-2 bg-[#fff] hover:text-[#292929] rounded-[5px] text-[#8e929b] shadow-md"
+            href="https://clearitt.com"
+            target={"_blank"}
+            >Read more</a>
           </div>
           </div>
         
@@ -76,9 +85,9 @@ const Login = () => {
             </div>
 
             <div className="mt-16">
-              <a className="flex items-center justify-center w-full bg-[#25a767] text-white py-3 rounded-[5px] hover:opacity-90 text-base" 
-              href={xeroUrl}
-              >Sign In</a>
+              <button className="flex items-center justify-center w-full bg-[#25a767] text-white py-3 rounded-[5px] hover:opacity-90 text-base" 
+              onClick={()=>navigate('/data-manager')}
+              >Sign In</button>
             </div>
 
            

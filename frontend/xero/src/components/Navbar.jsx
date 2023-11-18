@@ -3,7 +3,7 @@ import Context from '../stateContext/Context'
 import { Menu, Transition } from '@headlessui/react';
 import axios from 'axios';
 
-const Navbar = ({title = 'Data Manager'}) => {
+const Navbar = ({title = 'Data Manager', url}) => {
   const {isDataSource, setIsDataSource} = useContext(Context);
   const [metricNames, setMetricNames] = useState([])
 
@@ -23,7 +23,7 @@ const Navbar = ({title = 'Data Manager'}) => {
   }, [])
 
   return (
-    <div className='bg-white w-full h-[60px] top-0 pl-[60px] overflow-hidden shadow-lg'>
+    <div className='bg-white w-full h-[60px] top-0 ml-[64px] pr-[60px] overflow-hidden shadow-lg'>
     <div className='flex justify-between px-[52px] items-center h-full' >
         <div className='flex flex-row gap-x-8 items-center'>
             <h2 className='text-xl font-[500]'>{title}</h2>
@@ -34,7 +34,9 @@ const Navbar = ({title = 'Data Manager'}) => {
         </div>
         <div>
           {title === 'Data Manager' && (
-  <button className='bg-[#25a767] text-white px-5 py-1 rounded-[5px]'>New Connection</button>
+  <a className='bg-[#25a767] text-white px-5 py-2 rounded-[5px]'
+  href={url}
+  >New Connection</a>
           )}
           {/* {title === 'Metrics' && (
             <Menu as="div">

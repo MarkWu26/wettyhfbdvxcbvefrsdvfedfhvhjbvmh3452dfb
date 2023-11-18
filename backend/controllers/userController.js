@@ -33,6 +33,29 @@ export const addMetric = async (req, res) => {
     }
 }
 
+export const deleteMetric = async (req, res) => {
+    try {
+        const {id} = req.params
+        const existingMetric = await prisma.user_saved_metrics.findUnique({
+            where: { id: parseInt(id) }, // Assuming 'id' is an integer
+          });
+      
+          if (!existingMetric) {
+            return res.status(404).json({ message: 'Metric not found' });
+          }
+      
+          // Delete the metric
+          const deletedMetric = await prisma.user_saved_metrics.delete({
+            where: { id: parseInt(id) },
+          });
+      
+          res.status(200).json(deletedMetric);
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: 'Internal server error' });
+        }
+}
+
 export const getAllMetrics = async (req, res) => {
     try {
         const metrics = await prisma.user_saved_metrics.findMany();

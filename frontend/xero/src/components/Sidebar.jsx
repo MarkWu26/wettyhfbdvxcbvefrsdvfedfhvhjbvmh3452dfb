@@ -7,9 +7,9 @@ import { RxDashboard } from "react-icons/rx";
 const Sidebar = () => {
   const navigate = useNavigate()
   return (
-    <div className='absolute h-screen w-[64px] bg-white z-20 '>
+    <div className=' h-screen w-[64px] bg-white z-30 fixed mt-[-60px]'>
         <div className='flex flex-col p-4'>
-            <div className='flex flex-col items-center gap-y-6 text-[22px] text-[#1b2024] py-32'>
+            <div className='flex flex-col items-center gap-y-6 text-[22px] text-[#1b2024] py-48'>
               {/* Data manager icon route */}
                 <button 
                 className='text-[#1b2024]'
