@@ -17,12 +17,13 @@ export const getSavedmetrics = async (req, res) => {
 
 export const addMetric = async (req, res) => {
     try {
-        const {name, value, value2} = req.body
+        const {name, value, value2, type} = req.body
         const addedMetric = await prisma.user_saved_metrics.create({
             data:{
                 metric_name: name,
                 value: value,
-                value2: value2
+                value2: value2 || '',
+                type: type || ''
             }
 
         });

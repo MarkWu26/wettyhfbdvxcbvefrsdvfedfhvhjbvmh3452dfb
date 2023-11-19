@@ -1,89 +1,104 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
+import { Menu, Transition } from '@headlessui/react';
+import { MdOutlineAdd } from "react-icons/md";
+import { FaMinus } from "react-icons/fa6";
+import { IoClose } from "react-icons/io5";
+import { FaDivide } from "react-icons/fa6";
+import FirstCalculation from '../components/firstCalculation';
+import SecondCalculation from '../components/SecondCalculation';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Test = () => {
-  const [metricValues, setMetricValues] = useState({});
-  const [selectedOperation, setSelectedOperation] = useState('add');
-  const [result, setResult] = useState(null);
 
-  const metricTypes = ['Revenue', 'Expense', 'Profit', 'Loss'];
+const Test = ({data}) => {
+  const [total1, setTotal1] = useState(null);
+  const [total2, setTotal2] = useState(null);
+  const [totalResult, setTotalResult] = useState(null)
+  const navigate = useNavigate()
+  const [name, setName] = useState('')
 
-  const handleMetricChange = (metricType, value) => {
-    setMetricValues((prevValues) => ({
-      ...prevValues,
-      [metricType]: parseFloat(value) || 0,
-    }));
+  const handleCalculateTotal1 = (total) => {
+    setTotal1(total);
   };
 
-  const handleOperationChange = (operation) => {
-    setSelectedOperation(operation);
+  const handleCalculateTotal2 = (total) => {
+    setTotal2(total);
   };
+  console.log('the first result is: ', total1)
+  console.log('the second result is: ', total2)
 
-  const calculateResult = () => {
-    const values = Object.values(metricValues);
-    let calculationResult;
-
-    switch (selectedOperation) {
-      case 'add':
-        calculationResult = values.reduce((acc, val) => acc + val, 0);
-        break;
-      case 'subtract':
-        calculationResult = values.reduce((acc, val) => acc - val, 0);
-        break;
-      case 'multiply':
-        calculationResult = values.reduce((acc, val) => acc * val, 1);
-        break;
-      case 'divide':
-        calculationResult = values.length > 0 ? values.reduce((acc, val) => acc / val) : 0;
-        break;
-      default:
-        calculationResult = null;
+  useEffect(()=>{
+    if(total2 !== 0){
+      setTotalResult(Number(total1 / total2).toFixed(2))
+    }else{
+      setTotalResult(Number(total1).toFixed(2))
     }
+  }, [total1, total2])
 
-    setResult(calculationResult);
-  };
+  console.log('THE TOTAL RESULT IS: ', totalResult);
+
+  const addMetric = async () =>{
+    try {
+      const response = await axios.post('http://localhost:5000/user/addMetric', {
+          name: name,
+          value: totalResult,
+          type: 'custom'
+      });
+
+      console.log('THE METRICS ADDED IS: ', response.data)
+      window.location.reload()
+
+    /*   const newSaved = userSaved.concat(response.data)
+      const newSavedWithDescriptions = newSaved.map((item) => {
+        const metricDefinition = definition.find((def) => def.name === item.metric_name);
+      
+        return {
+          ...item,
+          description: metricDefinition?.description || 'No description available',
+        };
+      }); */
+
+    /*   setUserSaved(newSavedWithDescriptions) */
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
-    <div>
-      <h2>Calculator</h2>
-
-      <div>
-        {metricTypes.map((metricType) => (
-          <div key={metricType}>
-            <label htmlFor={metricType}>{metricType}:</label>
-            <input
-              type="number"
-              id={metricType}
-              value={metricValues[metricType] || ''}
-              onChange={(e) => handleMetricChange(metricType, e.target.value)}
-            />
-          </div>
-        ))}
-      </div>
-
-      <div>
-        <label htmlFor="operation">Operation:</label>
-        <select
-          id="operation"
-          value={selectedOperation}
-          onChange={(e) => handleOperationChange(e.target.value)}
-        >
-          <option value="add">Add</option>
-          <option value="subtract">Subtract</option>
-          <option value="multiply">Multiply</option>
-          <option value="divide">Divide</option>
-        </select>
-      </div>
-
-      <button onClick={calculateResult}>Calculate</button>
-
-      {result !== null && (
-        <div>
-          <h3>Result:</h3>
-          <p>{result}</p>
-        </div>
-      )}
+    <div className='pb-12'>
+    <FirstCalculation data={data} onCalculateTotal={handleCalculateTotal1}/>
+    <div className='flex mx-32  h-[15px] w-[full] bg-blue-300 rounded-sm shadow-lg'>
+     
     </div>
-  );
+    <SecondCalculation data={data} onCalculateTotal={handleCalculateTotal2}/>
+    <div className='flex flex-col gap-y-3 mt-5 px-32 '>
+        {/* add metric name and save */}
+        <div className='flex ml-[440px] flex-col justify-center items-center bg-white w-[450px] rounded-lg shadow-lg h-[100px] '>
+          <div className='flex flex-row justify-between w-full px-10 h-full items-center'> 
+            {/* Input */}
+            <div className='flex flex-col gap-y-2'>
+              <span className=''>Metric Name</span>
+              <input className='border-2 px-4 text-md py-1 rounded-md' placeholder='Enter Metric Name..'
+              required
+              onChange={(e)=>setName(e.target.value)}
+              />
+            </div>
+            {/* Button */}
+            <div>
+              <button className='bg-green-600 px-8 py-2 rounded-lg text-white hover:opacity-95 flex items-end mt-7'
+              onClick={()=>addMetric()}
+              
+              >Save</button>
+            </div>
+          </div>
+        </div>
+           
+      </div>
+    </div>
+   
+    
+  )
 };
 
 export default Test;

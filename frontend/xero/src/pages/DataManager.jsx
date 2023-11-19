@@ -9,6 +9,7 @@ import axios from "axios";
 
 const DataManager = () => {
   const [xeroUrl, setXeroUrl] = useState('');
+  const [count, setCount] = useState(0);
 
   useEffect(()=>{
     const fetchXeroUrl = async () =>{
@@ -22,7 +23,28 @@ const DataManager = () => {
       }
     }
 
+    const fetchMetrics = async () => {
+      try{
+        const userMetrics = await axios.get(
+          "http://localhost:5000/user/savedMetrics",
+          {
+            withCredentials: true,
+          }
+        );
+        const metricsResponse = userMetrics.data.metrics;
+        console.log('the count of metrics is:', metricsResponse.length)
+        setCount(metricsResponse.length)
+    
+      }catch(error){
+        console.log(error)
+      }
+    
+
+   
+    }
+
     fetchXeroUrl();
+    fetchMetrics();
   }, [])
 
 
@@ -30,11 +52,11 @@ const DataManager = () => {
 
 
   return (
-    <div className="overflow-hidden overflow-y-hidden">
+    <div className="w-screen h-screen overflow-x-hidden">
       <Sidebar />
       <Navbar url={xeroUrl}/>
       {/* Body */}
-      <div className="mt-[30px] ml-[70px] py-5 px-12">
+      <div className="mt-[30px] ml-[70px] py-16 px-12">
         {/* Search */}
         <div className="mb-5 flex flex-row items-center justify-between">
           <Searchbar />
@@ -60,7 +82,7 @@ const DataManager = () => {
         </div>
         {isDataSource ? (
           <div>
-            <TableList />
+            <TableList count={count} xeroUrl={xeroUrl} />
           </div>
         ): (
             <div>

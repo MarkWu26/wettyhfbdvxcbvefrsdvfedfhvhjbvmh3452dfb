@@ -67,4 +67,5 @@ model user_saved_metrics {
   metric_name String  @db.VarChar(255)
   value       String? @db.VarChar(255)
   value2      String? @db.VarChar(255)
+  type        String? @db.VarChar(100)
 }

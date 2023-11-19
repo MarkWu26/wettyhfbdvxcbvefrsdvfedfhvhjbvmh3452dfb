@@ -203,6 +203,30 @@ const __dirname = dirname(__filename);
         })
     })
 
+    app.get('/balance', async function (req, res) {
+        var balanceOptions = {
+            url: 'https://api.xero.com/api.xro/2.0/Reports/BalanceSheet',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'xero-tenant-id': req.session.xeroTenantId
+            },
+            auth: {
+                'bearer': req.session.accessToken
+            }
+        }
+
+        request.get(balanceOptions, function (error, response, body) {
+            if (error) {
+                console.log('error from balance reports: ' + error)
+            }
+
+            console.log('body: ' + body)
+            res.status(200).json({body})
+        })
+    })
+
+
 
     app.get('/getOrganisation', async function (req, res) {
         var organisationRequestOptions = {

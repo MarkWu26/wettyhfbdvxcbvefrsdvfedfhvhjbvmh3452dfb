@@ -23,18 +23,22 @@ const Navbar = ({title = 'Data Manager', url}) => {
   }, [])
 
   return (
-    <div className='bg-white w-full h-[60px] top-0 ml-[64px] pr-[60px] overflow-hidden shadow-lg'>
+    <div className='bg-white w-full h-[60px] top-0 ml-[64px] pr-[60px] overflow-hidden shadow-lg fixed mb-32 z-[0]'>
     <div className='flex justify-between px-[52px] items-center h-full' >
         <div className='flex flex-row gap-x-8 items-center'>
             <h2 className='text-xl font-[500]'>{title}</h2>
-            <h4 className='text-sm'>{title !== 'Data Manager' ? '' : 'DATA SOURCE CONNECTIONS 2'}</h4>
+            <button className='text-sm'
+            onClick={()=>setIsDataSource(true)}
+            >
+              {title !== 'Data Manager' ? '' : 'DATA SOURCE CONNECTIONS'}
+            </button>
             <button className='text-sm text-[#8e929b]'
-            onClick={()=>setIsDataSource(!isDataSource)}
+            onClick={()=>setIsDataSource(false)}
             >{title !== 'Data Manager' ? '' : 'AVAILABLE INTEGRATIONS' }</button>
         </div>
         <div>
           {title === 'Data Manager' && (
-  <a className='bg-[#25a767] text-white px-5 py-2 rounded-[5px]'
+  <a className='bg-[#25a767] text-white px-5 py-2 rounded-[5px] hover:opacity-95'
   href={url}
   >New Connection</a>
           )}

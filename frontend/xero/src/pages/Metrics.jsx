@@ -7,6 +7,7 @@ import CalculateMetrics from "../components/CalculateMetrics";
 import { BsInfoCircleFill } from "react-icons/bs";
 import Modal from "../components/Modal";
 import { BiSolidTrash } from "react-icons/bi";
+import Test from "./Test";
 
 const Metrics = () => {
   const [data, setData] = useState([]);
@@ -18,6 +19,15 @@ const Metrics = () => {
   const [userSaved, setUserSaved] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const [selectedMetric, setSelectedMetric] = useState('')
+  const [hoveredItem, setHoveredItem] = useState(null);
+  console.log('HOVER: ', hoveredItem)
+  const handleMouseEnter = (item) => {
+    setHoveredItem(item);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredItem(null);
+  };
 
 
   const definition = [
@@ -52,6 +62,22 @@ const Metrics = () => {
     {
       name: 'Net assets',
       description: "Net Assets is the total value of an organization's assets minus its liabilities. It reflects the overall financial health of the business and is used to determine the company's ability to pay off long-term debt and generate future profits."
+    },
+    {
+      name: 'Direct costs',
+      description: "Direct Costs metric refers to the expenses incurred specifically for the production of goods or services. These costs are directly tied to the production process and can include raw materials, labor costs, and other expenses directly related to production."
+    },
+    {
+      name: 'Other Income',
+      description: "Other Income is a revenue source recorded in Xero that is not derived from a business's primary activity or core operations. It includes proceeds from one-time events, investments, or sale of assets."
+    },
+    {
+      name: 'Number of invoices issued',
+      description: "The Invoices Issued metric measures the total number of invoices that have been created and sent to customers during a specified period in Xero accounting software."
+    },
+    {
+      name: 'Gross profit (loss)',
+      description: "Profit (Loss) measures the financial success or failure of a business by calculating the difference between revenue and expenses. It shows the amount of money a business has earned or lost during a specific period, usually a year."
     },
 
   ]
@@ -115,11 +141,33 @@ const Metrics = () => {
             withCredentials: true,
           }
         );
-        /*   setUserSaved(userMetrics.data.metrics) */
+        const fetchBalance = await axios.get('http://localhost:5000/balance', {
+          withCredentials: true,
+        }) 
+           setUserSaved(userMetrics.data.metrics)
         
-        console.log('HOOIII: ', userMetrics.data)
         const reports = JSON.parse(response.data.body).Reports[0];
-        console.log(reports);
+
+       
+       
+
+        const businessBankAccount = JSON.parse(fetchBalance.data.body).Reports[0].Rows
+        .find(section => section.Title === "Bank")
+        .Rows.find(row => row.RowType === "SummaryRow").Cells[1].Value;
+ 
+
+        const equity = JSON.parse(fetchBalance.data.body).Reports[0].Rows
+        .find(section => section.Title === "Equity")
+        .Rows.find(row => row.RowType === "SummaryRow").Cells[1].Value;
+     
+
+        const retainedEarnings = JSON.parse(fetchBalance.data.body).Reports[0].Rows
+        .find(section => section.Title === "Equity").Rows[1].Cells[1].Value
+       ;
+
+       const yearEarnings = JSON.parse(fetchBalance.data.body).Reports[0].Rows
+       .find(section => section.Title === "Equity").Rows[0].Cells[1].Value
+      ;
 
         const extractCellValues = async () => {
           const cellValuesArray =
@@ -142,8 +190,62 @@ const Metrics = () => {
               })
             ) || [];
 
+            const totalCurrentAssets = JSON.parse(fetchBalance.data.body).Reports[0].Rows
+            .find(section => section.Title === "Current Assets")
+            .Rows.find(row => row.RowType === "SummaryRow").Cells[1].Value;
+        
+          const totalCurrentLiabilities = JSON.parse(fetchBalance.data.body).Reports[0].Rows
+            .find(section => section.Title === "Current Liabilities")
+            .Rows.find(row => row.RowType === "SummaryRow").Cells[1].Value;
+        console.log('GOT VALUES: ', totalCurrentAssets, totalCurrentLiabilities)
+          // Append Total Current Assets to cellValuesArray
+          cellValuesArray.unshift({
+            metric_name: 'Current Assets',
+            description: 'No description',
+            value: totalCurrentAssets,
+            value2: '',
+          });
+        
+          // Append Total Current Liabilities to cellValuesArray
+          cellValuesArray.unshift({
+            metric_name: 'Current Liabilities',
+            description: 'No description',
+            value: totalCurrentLiabilities,
+            value2: '',
+          });
+
+          cellValuesArray.unshift({
+            metric_name: 'Bank Balances',
+            description: 'No description',
+            value: businessBankAccount,
+            value2: '',
+          })
+          cellValuesArray.unshift({
+            metric_name: 'Equity',
+            description: 'No description',
+            value: equity,
+            value2: '',
+          })
+          cellValuesArray.unshift({
+            metric_name: 'Retained Earnings',
+            description: 'No description',
+            value: retainedEarnings,
+            value2: '',
+          })
+          cellValuesArray.unshift({
+            metric_name: 'Year Earnings',
+            description: 'No description',
+            value: yearEarnings,
+            value2: '',
+          })
+
+
             console.log('api result', cellValuesArray)
-            setOrigData(cellValuesArray)
+            const toFilter = ['Cash received', 'Cash spent', 'Cash surplus (deficit)'];
+
+            const newOrigData = cellValuesArray.filter((item) => !toFilter.includes(item?.metric_name));
+            
+            setOrigData(newOrigData)
 
             if(!savedMetric){
          
@@ -158,9 +260,7 @@ const Metrics = () => {
                 "Net assets",
               ];
         
-          /*     const newData = cellValuesArray.filter((item) =>
-                categoriesToInclude.includes(item?.metric_name)
-              ); */
+        
               const testdata = userMetrics.data.metrics;
               const newsaved = testdata.map((item) => item);
 
@@ -177,13 +277,6 @@ const Metrics = () => {
               setUserSaved(newSavedWithDescriptions)
               console.log('HOHO', newSavedWithDescriptions)
 
-           /*    const combine = [...data, newData]
-              const latestData = [data, ...userMetrics.data.metrics]
-              console.log('LATEST DATA: ', latestData)
-
-              setData(...cellValuesArray, ...latestData);
-              console.log('THE NEW DATA IS: ', [...data, latestData]) */
-              
             
               setData(newSavedWithDescriptions)
             }else{
@@ -290,20 +383,21 @@ const Metrics = () => {
    
   }
 
+  console.log('METRIC NAMES: ', metricNames)
 
   return (
-    <>
-    {console.log('WUUT: ', userSaved)}
+    <div className="w-screen h-screen overflow-x-hidden">
+       <Sidebar />
       <Navbar title={"Metrics"} />
-      <Sidebar />
+     <div className="py-16">
       <button 
-      className="bg-[#f3f4f5] text-secondary px-5 py-1 rounded-[5px] absolute top-0 mt-4 left-0 ml-60"
+      className="bg-[#f3f4f5] text-secondary px-5 py-1 rounded-[5px] absolute top-0 mt-4 left-0 ml-60 z-8"
       onClick={()=>setIsCustom(!isCustom)}
       >Custom Metrics</button>
       {!isCustom ? (
         <>
         <Menu as="div">
-        <Menu.Button className="bg-[#25a767] text-white px-5 py-1 rounded-[5px] absolute top-0 mt-4 right-0 mr-6">
+        <Menu.Button className="bg-[#25a767] text-white px-5 py-1 rounded-[5px] absolute top-0 mt-4 right-0 mr-6 hover:opacity-95">
           Add Metric
         </Menu.Button>
         <Transition
@@ -317,24 +411,42 @@ const Metrics = () => {
         >
           <Menu.Items className="absolute mt-2 origin-top-right right-10 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none w-[400px] z-10">
             <div className="px-1 py-1 w-full ">
-              
-      
               {
               origData.map((item) => item && (
             
-                <Menu.Item key={item?.metric_name} className="z-10">
-                  {({ active }) => (
+                <Menu.Item key={item?.metric_name} >
+                {({ active }) => (
+                  <div
+                    className={`${
+                      active ? "bg-[#f3f4f5]" : ""
+                    }  px-4 py-2 text-sm text-gray-700 cursor-pointer w-full flex items-center justify-between`}
+                    onClick={() => addMetric(item?.metric_name, item.value, item.value2)}
+                  >
                     <button
-                      className={`${
-                        active ? "bg-[#f3f4f5]" : ""
-                      }  px-4 py-2 text-sm text-gray-700 cursor-pointer w-full flex items-center justify-between`}
-                      onClick={()=>addMetric(item?.metric_name, item.value, item.value2)}
+                     /*  onClick={() => addMetric(item?.metric_name, item.value, item.value2)} */
                     >
-                      {item?.metric_name} <BsInfoCircleFill className="text-blue-500"/>
+                      {item?.metric_name}
                     </button>
-                  )}
-                </Menu.Item>
+                    <div
+                      className="relative"
+                      onMouseEnter={() => handleMouseEnter(item)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <BsInfoCircleFill className="text-blue-500" />
+                      {hoveredItem && hoveredItem.metric_name === item.metric_name && (
+                        // Dropdown to display item.description
+                        <div className="absolute z-50 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none mt-2 w-[200px] right-0">
+                          <div className="px-4 py-2 text-sm text-gray-700">
+                            {hoveredItem.description}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </Menu.Item>
               ))}
+             
             </div>
           </Menu.Items>
         </Transition>
@@ -351,11 +463,11 @@ const Metrics = () => {
               
               <Menu
                 as="div"
-                className="relative flex items-center justify-between gap-x-8 text-left mb-8"
+                className="flex items-center justify-between gap-x-8 text-left mb-8 "
               >
                  
                 <div>
-                  <Menu.Button className="text-secondary text-xs hover:bg-[#f3f4f5] rounded-md px-3 py-1">
+                  <Menu.Button className="text-secondary text-xs hover:bg-[#f3f4f5] rounded-md px-3 py-1 ">
                     {selectedCategories[item.metric_name] ||
                     selectedCategories[item.metric_name] === undefined
                       ? "Current Month"
@@ -370,6 +482,7 @@ const Metrics = () => {
                   <BsInfoCircleFill className="text-blue-500"/>
                 </button>
                 <button
+                className=""
                 onClick={()=>handleDelete(item.id)}
                 >
                 <BiSolidTrash className="text-red-500"/>
@@ -423,7 +536,9 @@ const Metrics = () => {
               <div className="flex items-center justify-center flex-col gap-y-3">
                 <div className="font-medium text-lg"> {item?.metric_name}</div>
                 <div className="font-bold text-[40px] tracking-wider">
-                  <span className="mr-1">$</span>
+                <span className="mr-1">
+      {metricNames.some(metric => metric.metric_name === item.metric_name && metric.metric_type === 'Amount') ? 'A$' : ''}
+    </span>
 
                   {item.metric_name === "Gross profit margin"
                     ? item.value // Display the raw value without conversion
@@ -441,10 +556,10 @@ const Metrics = () => {
       </div>
         </>
       ) : <>
-      <CalculateMetrics data={origData}/>
+      <Test data={origData}/>
       </>}
-      
-    </>
+      </div>
+    </div>
   );
 };
 

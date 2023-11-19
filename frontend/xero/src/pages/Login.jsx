@@ -45,7 +45,7 @@ const Login = () => {
           <div className=" text-[20px] text-[#292929] mt-4 font-[500]">
           <span className="mb-4">Don’t just pay it. Clear it.</span> <br className="mb-4"/>
 
-
+<span></span>
 Our Fintech solution empowers small and medium enterprises to save time, money and free up working capital by helping them settle their B2B invoices with minimal or no cash payments.
 Our Cashflow Moniitor allows SMEs to keep track of their cashflow by monitoring 8 different metrics and compare against benchmarks.
           </div>

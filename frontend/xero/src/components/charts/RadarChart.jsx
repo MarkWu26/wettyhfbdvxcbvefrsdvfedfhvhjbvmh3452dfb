@@ -6,7 +6,11 @@ import axios from 'axios';
 axios.defaults.baseURL = 'http://localhost:5000'
 
 const RadarChart = () => {
-
+  const customColors = {
+    'SME A': 'black', // Customize color for 'SME A'
+    Benchmark: 'green', // Customize color for 'Benchmark'
+  };
+  const customBorder = ({ key }) => (key === 'SME A' ? '2px dotted black' : '');
  
   const [metrics, setMetrics] = useState(null);
 
@@ -27,6 +31,9 @@ const RadarChart = () => {
   
 
   console.log(metrics)
+
+   const customDotSize = ({ key }) => (key === 'Benchmark' ? 0 : 10);
+  const customDotColor = ({ key }) => (key === 'Benchmark' ? 'transparent' : { theme: 'background' });
   
 
   return (
@@ -42,9 +49,11 @@ const RadarChart = () => {
     dotSize={10}
     dotColor={{ theme: 'background' }}
     dotBorderWidth={2}
-    colors={{ scheme: 'nivo' }}
     blendMode="multiply"
     motionConfig="wobbly"
+    fillOpacity={0}
+    colors={({ key }) => customColors[key] || 'gray'} 
+     borderWidth={({ key }) => (key === 'SME A' ? '2px dotted black' : '')}
 />
     )}
     
