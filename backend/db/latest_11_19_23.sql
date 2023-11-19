@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2023 at 02:01 PM
+-- Generation Time: Nov 19, 2023 at 04:36 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -77,11 +77,11 @@ INSERT INTO `metric` (`metric_name`, `description`, `metric_type`, `about`) VALU
 ('Cash spent', 0, '', ''),
 ('Cash surplus (deficit)', 0, '', ''),
 ('Closing bank balance', 0, '', ''),
-('Creditors', 0, '', ''),
+('Creditors', 0, 'Amount', ''),
 ('Current assets to liabilities', 0, '', ''),
-('Debtors', 0, '', ''),
-('Direct costs', 0, '', ''),
-('Expenses', 1, 'test', 'asdfasdf'),
+('Debtors', 0, 'Amount', ''),
+('Direct costs', 0, 'Amount', ''),
+('Expenses', 1, '', 'asdfasdf'),
 ('Gross profit (loss)', 0, '', ''),
 ('Income', 0, '', ''),
 ('Net assets', 0, '', ''),
@@ -165,17 +165,32 @@ CREATE TABLE `user_saved_metrics` (
   `id` int(11) NOT NULL,
   `metric_name` varchar(255) NOT NULL,
   `value` varchar(255) DEFAULT NULL,
-  `value2` varchar(255) DEFAULT NULL
+  `value2` varchar(255) DEFAULT NULL,
+  `type` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user_saved_metrics`
 --
 
-INSERT INTO `user_saved_metrics` (`id`, `metric_name`, `value`, `value2`) VALUES
-(118, 'Cash surplus (deficit)', '-1592.60', '-353.81'),
-(119, 'Income', '2067.60', '8710.89'),
-(120, 'Expenses', '4516.27', '8963.80');
+INSERT INTO `user_saved_metrics` (`id`, `metric_name`, `value`, `value2`, `type`) VALUES
+(129, 'Income', '2067.60', '8710.89', 'standard'),
+(132, 'Debtors', '9194.51', '6946.33', 'standard'),
+(133, 'Creditors', '8405.66', '2242.00', 'standard'),
+(151, 'Gross profit margin', '62.5%', '100.0%', 'standard'),
+(152, 'Expenses', '4516.27', '8963.80', 'standard'),
+(153, 'Average creditors days', '47.648882800321224431952383202', '7.753631272451415694236819207', 'standard'),
+(166, 'Average debtors days', '133.40844457341845618107951248', '24.720347748622701009885327447', 'standard'),
+(167, 'Net assets', '3010.78', '6235.43', 'standard'),
+(171, 'sample metric', '18675679.70', '', 'custom'),
+(172, 'Direct costs', '775.98', '0.00', ''),
+(175, 'Year Earnings', '3029.68', '', ''),
+(176, 'Current Assets', '9194.51', '', ''),
+(177, 'Current Liabilities', '12642.55', '', ''),
+(178, 'Bank Balances', '1760.54', '', ''),
+(179, 'Retained Earnings', '-18.90', '', ''),
+(180, 'Equity', '3010.78', '', ''),
+(181, 'test metric', '6040.46', '', 'custom');
 
 --
 -- Indexes for dumped tables
@@ -261,7 +276,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user_saved_metrics`
 --
 ALTER TABLE `user_saved_metrics`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
