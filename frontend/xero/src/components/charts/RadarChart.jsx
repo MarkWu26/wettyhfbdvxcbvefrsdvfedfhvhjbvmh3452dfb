@@ -13,12 +13,20 @@ const RadarChart = () => {
   const customBorder = ({ key }) => (key === 'SME A' ? '2px dotted black' : '');
  
   const [metrics, setMetrics] = useState(null);
+  const [key, setKey] = useState(null)
 
   useEffect(()=>{
     const fetchMetrics = async () =>{
       try {
         const response = await axios.get('/metrics');
         console.log('the result is: ', response.data)
+
+        const dataKeys = Object.fromEntries(Object.entries(response.data[1]).filter(([key])=>key!=='type'))
+
+        const newKeys = Object.keys(dataKeys)
+        console.log('the new key: ', newKeys)
+        setKey(newKeys)
+
         setMetrics(response.data);
       } catch (error) {
         console.log(error)
@@ -32,16 +40,13 @@ const RadarChart = () => {
 
   console.log(metrics)
 
-   const customDotSize = ({ key }) => (key === 'Benchmark' ? 0 : 10);
-  const customDotColor = ({ key }) => (key === 'Benchmark' ? 'transparent' : { theme: 'background' });
-  
 
   return (
     <>
     {metrics && (
       <ResponsiveRadar
     data={metrics}
-    keys={['SME A', 'Benchmark']}
+    keys={key}
     indexBy="type"
     margin={{ top: 70, right: 80, bottom: 40, left: 80 }}
     borderColor={{ from: 'color' }}
@@ -53,8 +58,8 @@ const RadarChart = () => {
     motionConfig="wobbly"
     fillOpacity={0}
     colors={({ key }) => customColors[key] || 'gray'} 
-     borderWidth={({ key }) => (key === 'SME A' ? '2px dotted black' : '')}
-/>
+    borderWidth={({ key }) => (key === 'SME A' ? '2px dotted black' : '')}
+    />
     )}
     
 </>

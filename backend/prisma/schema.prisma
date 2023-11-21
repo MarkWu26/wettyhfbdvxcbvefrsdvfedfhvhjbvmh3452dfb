@@ -56,10 +56,10 @@ model radar_chart {
 }
 
 model metric {
-  metric_name String @id @db.VarChar(255)
-  description Int
-  metric_type String @db.VarChar(20)
-  about       String @db.Text
+  metric_name String  @id @db.VarChar(255)
+  description String? @db.Text
+  metric_type String? @db.VarChar(20)
+  about       String? @db.Text
 }
 
 model user_saved_metrics {

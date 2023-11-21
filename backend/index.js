@@ -85,6 +85,7 @@ const __dirname = dirname(__filename);
             //     client_secret
             //     redirect_uri
             //     code - the authorization code from the query string in req.url
+            
             const token = await client.authorizationCallback(redirectUrl, req.query) 
             // The authorization server will respond with a JSON object containing:
             //     token_type  “Bearer”

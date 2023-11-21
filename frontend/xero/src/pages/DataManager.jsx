@@ -53,7 +53,7 @@ const DataManager = () => {
 
   return (
     <div className="w-screen h-screen overflow-x-hidden">
-      <Sidebar />
+      <Sidebar title={"Data Manager"}/>
       <Navbar url={xeroUrl}/>
       {/* Body */}
       <div className="mt-[30px] ml-[70px] py-16 px-12">

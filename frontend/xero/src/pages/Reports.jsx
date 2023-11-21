@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 const Reports = () => {
   return (
     <div className="w-screen h-screen overflow-hidden overflow-y-hidden">
-      <Sidebar/>
+      <Sidebar title={"Reports"}/>
       <Navbar title={"Cashflow Visualization Monitor"}/>
       {/* Body */}
       <div className="mt-[30px] ml-[150px] py-16 px-12 w-[85%] h-[100%] flex items-center justify-center">

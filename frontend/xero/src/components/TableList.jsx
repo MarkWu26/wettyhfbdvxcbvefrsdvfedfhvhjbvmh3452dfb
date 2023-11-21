@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useNavigate } from "react-router-dom";
+import { HiRefresh } from "react-icons/hi";
 
 const TableList = ({count, xeroUrl}) => {
 
@@ -15,7 +16,7 @@ const TableList = ({count, xeroUrl}) => {
           <div className="w-[14%] ">Permisions</div>
           <div className="w-[20%] ">Status</div>
           <div className=" w-[24%]">Available Metrics</div>
-          <div className=" w-[10%]">Details</div>
+          <div className=" w-[10%]"></div>
         </div>
       </div>
       <div className="h-[110px] bg-white hover:drop-shadow-lg">
@@ -46,13 +47,13 @@ const TableList = ({count, xeroUrl}) => {
             </div>
             </div>
           </div>
-          <div className="w-[14%] flex-row  flex items-center text-[#8e929b] justify-start px-2">
+          <div className="w-[14%] flex-row  flex items-center text-[#8e929b] justify-start px-1">
             <span>All users</span>
           </div>
-          <div className="w-[20%] flex-row  flex items-center text-[#8e929b] justify-start px-2">
-            <span></span>
+          <div className="w-[20%] flex-row  flex items-center text-[#8e929b] justify-start ">
+            <span>Updated hourly</span>
           </div>
-          <div className="w-[24%] flex-row  flex items-center text-[#8e929b] justify-start px-2">
+          <div className="w-[24%] flex-row  flex items-center text-[#8e929b] justify-start">
             <span>{count}</span>
           </div>
           <div className="w-[10%] flex-row flex items-center text-[#8e929b] justify-start relative">
@@ -61,7 +62,7 @@ const TableList = ({count, xeroUrl}) => {
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <Menu.Button className="text-gray-700 focus:outline-none">
-          <button className="bg-indigo-500 px-4 text-white rounded-md ml-[-20px] py-1 hover:opacity-95">Details</button>
+          <button className="bg-white text-sm font-medium text-sky-600 border border-sky-600 px-8  rounded-md ml-[-20px] py-1 hover:opacity-95 hover:text-white hover:bg-sky-600 transition-all ease-in-out duration-200">Details</button>
           </Menu.Button>
         </div>
 
@@ -80,10 +81,10 @@ const TableList = ({count, xeroUrl}) => {
                 <a
                   className={`${
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                  } block px-4 py-2 text-sm w-full text-left`}
+                  } flex flex-row items-center gap-x-3 px-4 py-2 text-sm w-full text-left`}
                   href={xeroUrl}
                 >
-                  Reauthorize
+                   <HiRefresh className="text-lg"/> Reauthorize
                 </a>
               )}
             </Menu.Item>

@@ -13,6 +13,8 @@ const FirstCalculation = ({data, onCalculateTotal}) => {
     { name: 'Divide', button: <FaDivide /> },
   ];
 
+  const [isCustom, setIsCustom] = useState(false)
+
   const calculateTotal = () => {
     if (values.length === 0) {
       // No values, set total to 0
@@ -88,7 +90,7 @@ const FirstCalculation = ({data, onCalculateTotal}) => {
   }, [values, onCalculateTotal]);
 
   const finalData = data.filter((item)=>item)
-  /* console.log('HOHO: ', total) */
+ 
 
   return (
     <div className='flex flex-col gap-y-16 mt-5 px-32 py-16'>
@@ -113,6 +115,18 @@ const FirstCalculation = ({data, onCalculateTotal}) => {
               >
                 <Menu.Items className='absolute origin-bottom-right mt-2 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none w-[300px] h-[400px] overflow-y-auto z-10'>
                   <div className="px-1 py-1 w-full">
+               {/*    <Menu.Item  className="z-10">
+                          {({ active }) => (
+                            <button
+                              className={`${
+                                active ? 'bg-[#f3f4f5]' : ''
+                              } block px-4 py-2 text-sm text-gray-700 cursor-pointer w-full`}
+                             
+                            >
+                              add custom value
+                            </button>
+                          )}
+                        </Menu.Item> */}
                     {finalData &&
                       finalData.map((item) => (
                         <Menu.Item key={item?.metric_name} className="z-10">
