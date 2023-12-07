@@ -11,10 +11,21 @@ import { GiCardboardBox } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 import { PiLifebuoy } from "react-icons/pi";
 import { SiReactos } from "react-icons/si";
+import { useContext } from 'react';
+import Context from '../stateContext/Context';
+import axios from 'axios'
 
 
 const Sidebar = ({title}) => {
   const navigate = useNavigate()
+  const {userInfo} = useContext(Context)
+
+  const handleLogout = async () => {
+   const logout = await axios.get('http://localhost:5000/logout');
+    console.log('logout: ', logout)
+    navigate('/')
+
+  }
   return (
     <div className=' h-[1200px] w-[64px] bg-white z-30 fixed '>
         <div className='flex flex-col p-4'>
@@ -75,9 +86,9 @@ const Sidebar = ({title}) => {
                   {/* Add your dropdown menu items here */}
                   <div className='mx-5 py-3 flex '>
                     <div className='flex flex-col'>
-                    <span className='text-[12px] text-blue-500'>ROMESH'S COMPANY</span>
-                    <span className='text-xl font-semibold'>Romesh</span>
-                    <span className='text-base text-secondary'>romesh@gmail.com</span>
+                    <span className='text-[12px] text-blue-500'>{userInfo?.orgName}</span>
+                    <span className='text-xl font-semibold'>{userInfo?.name}</span>
+                    <span className='text-base text-secondary'>{userInfo?.email}</span>
                     </div>
                    
                   </div>
@@ -112,7 +123,7 @@ const Sidebar = ({title}) => {
                         className={`${
                           active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
                         } flex w-full px-4 py-2 text-md items-center gap-x-3 `}
-                        onClick={()=>navigate('/')}
+                        onClick={()=>handleLogout()}
                       >
                         <TbLogout2 className='text-lg'/> Logout
                       </button>

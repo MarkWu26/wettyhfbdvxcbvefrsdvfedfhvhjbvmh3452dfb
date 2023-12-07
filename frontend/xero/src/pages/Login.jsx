@@ -22,8 +22,8 @@ const Login = () => {
             <div className="max-w-[230px]">
                 <SiReactos className="text-[80px]"/>
             </div>
-
-            <div className=" text-[20px] text-[#292929] mt-4 font-[500] flex-col flex mb-4">
+            {/* Nov 27 update */}
+           {/*  <div className=" text-[20px] text-[#292929] mt-4 font-[500] flex-col flex mb-4">
               <span className=" mt-4">Don’t just pay it. Clear it.</span>{" "}
               <br className="" />
               <span className=""></span>
@@ -32,9 +32,9 @@ const Login = () => {
               their B2B invoices with minimal or no cash payments. Our Cashflow
               Moniitor allows SMEs to keep track of their cashflow by monitoring
               8 different metrics and compare against benchmarks.
-            </div>
+            </div> */}
             {/* Button */}
-            <div className="mt-12">
+          {/*   <div className="mt-12">
               <a
                 className="px-[48px] py-2 bg-[#fff] hover:text-[#292929] rounded-[5px] text-[#8e929b] shadow-md"
                 href="https://clearitt.com"
@@ -42,7 +42,7 @@ const Login = () => {
               >
                 Read more
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

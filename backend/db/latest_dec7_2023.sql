@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2023 at 04:36 PM
+-- Generation Time: Dec 07, 2023 at 03:10 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -60,9 +60,9 @@ CREATE TABLE `external_system` (
 
 CREATE TABLE `metric` (
   `metric_name` varchar(255) NOT NULL,
-  `description` int(11) NOT NULL,
-  `metric_type` varchar(20) NOT NULL,
-  `about` text NOT NULL
+  `description` text DEFAULT NULL,
+  `metric_type` varchar(20) DEFAULT NULL,
+  `about` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -70,28 +70,32 @@ CREATE TABLE `metric` (
 --
 
 INSERT INTO `metric` (`metric_name`, `description`, `metric_type`, `about`) VALUES
-('Average creditors days', 0, '', ''),
-('Average debtors days', 0, '', ''),
-('Average value of invoices', 0, '', ''),
-('Cash received', 0, '', ''),
-('Cash spent', 0, '', ''),
-('Cash surplus (deficit)', 0, '', ''),
-('Closing bank balance', 0, '', ''),
-('Creditors', 0, 'Amount', ''),
-('Current assets to liabilities', 0, '', ''),
-('Debtors', 0, 'Amount', ''),
-('Direct costs', 0, 'Amount', ''),
-('Expenses', 1, '', 'asdfasdf'),
-('Gross profit (loss)', 0, '', ''),
-('Income', 0, '', ''),
-('Net assets', 0, '', ''),
-('Net profit margin', 0, '', ''),
-('Number of invoices issued', 0, '', ''),
-('Other Income', 0, '', ''),
-('Profit (loss)', 0, '', ''),
-('Return on investment (p.a.)', 0, '', ''),
-('Short term cash forecast', 0, '', ''),
-('Term assets to liabilities', 0, '', '');
+('Average creditors days', 'test descrip', '', ''),
+('Average debtors days', 'qweqweqwe', '', ''),
+('Average value of invoices', '', '', ''),
+('Bank Balances', NULL, NULL, NULL),
+('Cash received', '', '', ''),
+('Cash spent', '', '', ''),
+('Cash surplus (deficit)', '', '', ''),
+('Closing bank balance', '', '', ''),
+('Creditors', '', 'Amount', ''),
+('Current Assets', 'test hello haha', NULL, NULL),
+('Current assets to liabilities', '', '', ''),
+('Debtors', '', 'Amount', ''),
+('Direct costs', '', 'Amount', ''),
+('Equity', 'test', NULL, NULL),
+('Expenses', '', '', 'asdfasdf'),
+('Gross profit (loss)', '', '', ''),
+('Gross profit margin', 'test description', '', ''),
+('Income', '', '', ''),
+('Net assets', '', '', ''),
+('Net profit margin', '', '', ''),
+('Number of invoices issued', '', '', ''),
+('Other Income', '', '', ''),
+('Retained Earnings', 'test', NULL, NULL),
+('Short term cash forecast', '', '', ''),
+('Term assets to liabilities', '', '', ''),
+('Year Earnings', 'year earnings description', '', '');
 
 -- --------------------------------------------------------
 
@@ -174,23 +178,10 @@ CREATE TABLE `user_saved_metrics` (
 --
 
 INSERT INTO `user_saved_metrics` (`id`, `metric_name`, `value`, `value2`, `type`) VALUES
-(129, 'Income', '2067.60', '8710.89', 'standard'),
-(132, 'Debtors', '9194.51', '6946.33', 'standard'),
-(133, 'Creditors', '8405.66', '2242.00', 'standard'),
-(151, 'Gross profit margin', '62.5%', '100.0%', 'standard'),
-(152, 'Expenses', '4516.27', '8963.80', 'standard'),
-(153, 'Average creditors days', '47.648882800321224431952383202', '7.753631272451415694236819207', 'standard'),
-(166, 'Average debtors days', '133.40844457341845618107951248', '24.720347748622701009885327447', 'standard'),
-(167, 'Net assets', '3010.78', '6235.43', 'standard'),
-(171, 'sample metric', '18675679.70', '', 'custom'),
-(172, 'Direct costs', '775.98', '0.00', ''),
-(175, 'Year Earnings', '3029.68', '', ''),
-(176, 'Current Assets', '9194.51', '', ''),
-(177, 'Current Liabilities', '12642.55', '', ''),
-(178, 'Bank Balances', '1760.54', '', ''),
-(179, 'Retained Earnings', '-18.90', '', ''),
-(180, 'Equity', '3010.78', '', ''),
-(181, 'test metric', '6040.46', '', 'custom');
+(209, 'Retained Earnings', '-18.90', '', ''),
+(210, 'Year Earnings', '3029.68', '', ''),
+(213, 'Equity', '3010.78', '', ''),
+(214, 'Income', '2067.60', '8710.89', '');
 
 --
 -- Indexes for dumped tables
@@ -264,7 +255,7 @@ ALTER TABLE `metric_formula`
 -- AUTO_INCREMENT for table `radar_chart`
 --
 ALTER TABLE `radar_chart`
-  MODIFY `metrics_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `metrics_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -276,7 +267,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user_saved_metrics`
 --
 ALTER TABLE `user_saved_metrics`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=216;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

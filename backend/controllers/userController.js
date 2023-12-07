@@ -69,7 +69,7 @@ export const getAllMetrics = async (req, res) => {
                 }
             });
     
-            console.log('the response is: ', response)
+          
     
             if(response){
                 console.log('SUCCESS');

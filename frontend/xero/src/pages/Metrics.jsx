@@ -19,7 +19,6 @@ const Metrics = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedMetric, setSelectedMetric] = useState('')
   const [hoveredItem, setHoveredItem] = useState(null);
-  console.log('HOVER: ', hoveredItem)
   const handleMouseEnter = (item) => {
     setHoveredItem(item);
   };
@@ -27,8 +26,6 @@ const Metrics = () => {
   const handleMouseLeave = () => {
     setHoveredItem(null);
   };
-  
-  
 
   const handleMenuClick = (category, isCurrent) => {
     setSelectedCategories((prevCategories) => ({
@@ -127,14 +124,16 @@ const Metrics = () => {
                 const metric_name = nameCell?.Value
 
                 const metricDefinition = metrics.find((def) => def.metric_name === metric_name);
-
-
-                return {
-                  metric_name: nameCell?.Value,
-                  description: metricDefinition?.description || 'No description available',
-                  value: valueCell?.Value,
-                  value2: value2Cell?.Value,
-                };
+                
+                if(metricDefinition){
+                  return {
+                    metric_name: metricDefinition?.metric_name,
+                    description: metricDefinition?.description || 'No description available',
+                    value: valueCell?.Value,
+                    value2: value2Cell?.Value,
+                  };
+                }
+                
               })
             ) || [];
 
@@ -145,10 +144,23 @@ const Metrics = () => {
           const totalCurrentLiabilities = JSON.parse(fetchBalance.data.body).Reports[0].Rows
             .find(section => section.Title === "Current Liabilities")
             .Rows.find(row => row.RowType === "SummaryRow").Cells[1].Value;
+
+            const getDescription = (metricName) => {
+
+                const foundMetric = metrics.find((item)=> item.metric_name === metricName)
+                console.log('testtt', foundMetric)
+              /*   console.log('found Metric', foundMetric.description); */
+                if(foundMetric){
+                  return foundMetric.description
+                }
+                
+            }
+
+
           // Append Total Current Assets to cellValuesArray
           cellValuesArray.unshift({
             metric_name: 'Current Assets',
-            description: 'No description',
+            description: getDescription('Current Assets') || 'No description available',
             value: totalCurrentAssets,
             value2: '',
           });
@@ -156,43 +168,41 @@ const Metrics = () => {
           // Append Total Current Liabilities to cellValuesArray
           cellValuesArray.unshift({
             metric_name: 'Current Liabilities',
-            description: 'No description',
+            description: getDescription('Current Liabilities') || 'No description available',
             value: totalCurrentLiabilities,
             value2: '',
           });
 
           cellValuesArray.unshift({
             metric_name: 'Bank Balances',
-            description: 'No description',
+            description: getDescription('Bank Balances') || 'No description available',
             value: businessBankAccount,
             value2: '',
           })
           cellValuesArray.unshift({
             metric_name: 'Equity',
-            description: 'No description',
+            description: getDescription('Equity') || 'No description available',
             value: equity,
             value2: '',
           })
           cellValuesArray.unshift({
             metric_name: 'Retained Earnings',
-            description: 'No description',
+            description: getDescription('Retained Earnings') || 'No description available',
             value: retainedEarnings,
             value2: '',
           })
           cellValuesArray.unshift({
             metric_name: 'Year Earnings',
-            description: 'No description',
+            description:  getDescription('Year Earnings') || 'No description available',
             value: yearEarnings,
             value2: '',
           })
 
 
             console.log('api result', cellValuesArray)
-            const toFilter = ['Cash received', 'Cash spent', 'Cash surplus (deficit)'];
-
-            const newOrigData = cellValuesArray.filter((item) => !toFilter.includes(item?.metric_name));
+         
             
-            setOrigData(newOrigData)
+            setOrigData(cellValuesArray)
 
             if(!savedMetric){
         
@@ -202,13 +212,18 @@ const Metrics = () => {
               const newSavedWithDescriptions = newsaved.map((item) => {
                 const metricDefinition = metrics.find((def) => def.metric_name === item.metric_name);
               
-                return {
-                  ...item,
-                  description: metricDefinition?.description == '' ? 'No description available' : metricDefinition?.description,
-                };
+                if(metricDefinition){
+                  return {
+                    ...item,
+                    
+                    description: metricDefinition?.description == '' ? 'No description available' : metricDefinition?.description,
+                  };
+                }
+             
               });
        
               setUserSaved(newSavedWithDescriptions)
+              
             
               setData(newSavedWithDescriptions)
             }else{
@@ -216,17 +231,18 @@ const Metrics = () => {
               const newSavedWithDescriptions = userSaved.map((item) => {
                 const metricDefinition = metrics.find((def) => def.name === item.metric_name);
               
-                return {
-                  ...item,
-                  description: metricDefinition.description == '' ? 'No description available' : metricDefinition.description,
-                };
+                if(metricDefinition){
+                  return {
+                    ...item,
+                    
+                    description: metricDefinition?.description == '' ? 'No description available' : metricDefinition?.description,
+                  };
+                }
+             
               });
-
-              setUserSaved(newSavedWithDescriptions)
-            
+              setUserSaved(newSavedWithDescriptions)  
             }
         };
-
         extractCellValues();
       } catch (error) {
         console.log(error);
@@ -287,9 +303,9 @@ const Metrics = () => {
 
       const fetchMetrics = await axios.get(
         "http://localhost:5000/metrics/metricNames"
-  );
+      );
     
-  const metrics = fetchMetrics.data;
+      const metrics = fetchMetrics.data;
 
       const newSaved = userSaved.concat(response.data)
       const newSavedWithDescriptions = newSaved.map((item) => {
@@ -498,7 +514,7 @@ const Metrics = () => {
               <Menu.Items className="absolute mt-2 origin-top-right top-[-15] bottom-[0] left-2 right-12 bg-white border-2 border-gray-200 divide-y divide-gray-100 rounded-md shadow-xl outline-none w-[300px] h-[400px] z-10 overflow-y-auto ">
                 <div className="px-1 py-1 w-full ">
                   {
-                  origData.map((item) => item && (
+                  origData.map((item) => item && item.metric_name !== null && (
                 
                     <Menu.Item key={item?.metric_name} >
                     {({ active }) => (
@@ -519,7 +535,7 @@ const Metrics = () => {
                           onMouseLeave={handleMouseLeave}
                         >
                           <BsInfoCircleFill className="text-blue-500" />
-                          {hoveredItem && hoveredItem.metric_name === item.metric_name && (
+                          {hoveredItem && hoveredItem.metric_name === item.metric_name && item.metric_name !== '' && (
                             // Dropdown to display item.description
                             <div className="absolute z-50 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none mt-2 w-[200px] right-0">
                               <div className="px-4 py-2 text-sm text-gray-700">

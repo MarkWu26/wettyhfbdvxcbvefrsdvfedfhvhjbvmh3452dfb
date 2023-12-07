@@ -1,14 +1,28 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useNavigate } from "react-router-dom";
 import { HiRefresh } from "react-icons/hi";
+import Context from "../stateContext/Context";
 
-const TableList = ({count, xeroUrl}) => {
-
+const TableList = ({count, xeroUrl, isLoggedIn}) => {
+  const {userInfo} = useContext(Context)
+  const authTimeInSeconds = userInfo?.authTime
+  const authTimeinMilliseconds = authTimeInSeconds * 1000
+  const authDate = new Date(authTimeinMilliseconds);
+  const formattedDate = authDate.toLocaleDateString('en-AU', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+ 
+  console.log('are you loggedIn? ', isLoggedIn)
+  console.log('USER INFO:: ', userInfo)
 
   return (
     <>
+    {userInfo && userInfo.name && isLoggedIn ? (
+      <>
       <div className=" bg-[#F9FAFA] rounded-t-[5px] overflow-hidden h-[45px]">
         <div className="bg-[#F9FAFA] w-full h-full flex flex-row text-[#8e929b] items-center px-5">
           <div className="w-[27%] ">Title</div>
@@ -31,7 +45,7 @@ const TableList = ({count, xeroUrl}) => {
                 />
               </div>
               <div className="w-[70%] flex flex-col">
-                <h2 className="font-medium text-lg">Demo Company (Global)</h2>
+                <h2 className="font-medium text-lg">{userInfo?.orgName}</h2>
                 <span className="text-[#8e929b] text-sm">Xero</span>
               </div>
             </div>
@@ -40,10 +54,10 @@ const TableList = ({count, xeroUrl}) => {
           <div className="w-[15%] flex-row  flex items-center text-[#8e929b] justify-start px-2">
             <div className="flex flex-col">
             <div>
-                <span>Nov 13, 2023</span>
+                <span>{formattedDate}</span>
             </div>
             <div>
-                <span>by Mark Wu</span>
+                <span>by {userInfo.name}</span>
             </div>
             </div>
           </div>
@@ -94,6 +108,16 @@ const TableList = ({count, xeroUrl}) => {
     </div>
         </div>
       </div>
+      </>
+    ) : (
+          <div className=" bg-[#F9FAFA] rounded-t-[5px] overflow-hidden h-[100px] shadow-lg">
+          <div className="bg-[#F9FAFA] w-full h-full flex flex-row text-[#8e929b] items-center px-5">
+            <span className="text-red-400">You are not connected to any data source. Please connect to a data source.</span>
+            </div>
+            </div>
+    ) }
+
+      
     </>
   );
 };

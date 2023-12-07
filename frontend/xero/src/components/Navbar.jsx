@@ -69,14 +69,14 @@ const Navbar = ({ title = "Data Manager", url, onCustomMetricsClick, isCustom, o
 
         </div>
         <div>
-          {title === "Data Manager" && (
-            <a
+         {/*  {title === "Data Manager" && isDataSource && (
+            <button
               className="bg-[#25a767] text-white px-5 py-1 rounded-[5px] hover:opacity-95 items-center flex"
-              href={url}
+              onClick={()=>setIsDataSource(false)}
             >
               New Connection
-            </a>
-          )}
+            </button>
+          )} */}
           {
             title === "Metrics" && !isCustom && (  
             <Menu as="div">

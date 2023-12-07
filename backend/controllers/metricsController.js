@@ -23,7 +23,7 @@ export const getMetrics = async (req, res) => {
             return typeObject;
           });
 
-        console.log('the result is: ', outputArray)
+    
 
  
         res.status(200).json(outputArray)
@@ -36,7 +36,7 @@ export const getMetrics = async (req, res) => {
 export const getMetricNames = async (req, res) => {
     try {
        const metricNames = await prisma.metric.findMany();
-        console.log(metricNames)
+       
        
         res.status(200).json(metricNames);
     } catch (error) {

@@ -12,20 +12,29 @@ const integrationList = [
     img: "https://upload.wikimedia.org/wikipedia/commons/3/33/MYOB_Logo.png",
   },
   {
-    name: "QuickBooks",
+    name: "Quickbooks",
     img: quickbooksImg,
   },
 ];
 
-const Integrations = () => {
+const Integrations = ({xeroUrl, search}) => {
   const [isHovered, setIsHovered] = useState(null);
+  console.log('the search iss: ', search)
+
+  const authXero = (name) => {
+    if (name === 'Xero'){
+      window.location.href= xeroUrl
+    }
+  }
 
   return (
     <div>
       <div className="flex flex-col gap-x-5 w-full">
         <div className="flex flex-row gap-x-5 ">
-          {integrationList.map((integration, index) => (
-            <div
+          {integrationList.map((integration, index) => 
+            {const shouldDisplay = search === '' || integration.name.toLowerCase().includes(search.toLowerCase());
+            return  (
+              shouldDisplay && (<div
               key={index}
               className={`flex bg-white px-8 w-[33%] rounded-xl h-[80px] shadow-lg cursor-pointer transition-all ease-in-out duration-500 ${
                 isHovered === index
@@ -34,6 +43,7 @@ const Integrations = () => {
               }`}
               onMouseEnter={() => setIsHovered(index)}
               onMouseLeave={() => setIsHovered(null)}
+              onClick={()=>authXero(integration.name)}
             >
               <div className="flex flex-row items-center gap-x-6 w-full">
                 {isHovered == index && (
@@ -59,7 +69,9 @@ const Integrations = () => {
                 </div>
               </div>
             </div>
-          ))}
+            ))}
+            
+          )}
         </div>
       </div>
     </div>

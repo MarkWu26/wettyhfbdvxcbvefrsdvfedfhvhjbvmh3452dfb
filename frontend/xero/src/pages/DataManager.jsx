@@ -10,12 +10,20 @@ import axios from "axios";
 const DataManager = () => {
   const [xeroUrl, setXeroUrl] = useState('');
   const [count, setCount] = useState(0);
+  const [userData, setUserData] = useState(null)
+  const [search, setSearch] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  console.log('the search is: ', search)
+  const {userInfo, setUserInfo} = useContext(Context);
+  console.log('userinfoo: ', userInfo)
+
+
 
   useEffect(()=>{
     const fetchXeroUrl = async () =>{
       try{
         const response = await axios.get('/')
-        console.log('the url is: ', response.data.xeroUrl);
         setXeroUrl(response.data.xeroUrl);
       }
       catch(error){
@@ -43,23 +51,65 @@ const DataManager = () => {
    
     }
 
+    const getAuth = async () => {
+      const auth = await axios.get(
+        "http://localhost:5000/getAuth",
+        {
+          withCredentials: true,
+        }
+      );
+   
+      const userInfo = auth.data.userInfo
+      const {name, email, auth_time} = JSON.parse(userInfo)
+      const newUserInfo = {
+        name: name,
+        email:email,
+        authTime: auth_time
+      }
+      console.log(JSON.parse(auth.data.userInfo))
+      setUserInfo(newUserInfo)
+      if(name, email, auth_time){
+        setIsLoggedIn(true)
+      }
+
+      const organization = await axios.get('http://localhost:5000/getOrganisation',  {
+        withCredentials: true,
+      })
+      const org = JSON.parse(organization.data.body)
+      const orgName = org.Organisations[0].Name
+
+      const organizationName = {
+        orgName: orgName
+      }
+     
+      setUserInfo({...newUserInfo, ...organizationName})
+     
+    }
+
+
     fetchXeroUrl();
     fetchMetrics();
+    getAuth()
+   
   }, [])
 
 
   const { isDataSource } = useContext(Context);
+ 
 
 
   return (
     <div className="w-screen h-screen overflow-x-hidden">
-      <Sidebar title={"Data Manager"}/>
+      <Sidebar title={"Data Manager"} userInfo={userData} isLoggedIn={isLoggedIn}/>
       <Navbar url={xeroUrl}/>
       {/* Body */}
       <div className="mt-[30px] ml-[70px] py-16 px-12">
         {/* Search */}
-        <div className="mb-5 flex flex-row items-center justify-between">
-          <Searchbar />
+        <div className= {`mb-5 flex flex-row items-center  ${isDataSource ? 'justify-end' : 'justify-between'}`}>
+          {!isDataSource && (
+          <Searchbar setSearch={setSearch} search={search} />
+          ) }
+        
           {isDataSource && (
             <div className="flex flex-row gap-x-4">
               <div className="flex-row">
@@ -82,11 +132,11 @@ const DataManager = () => {
         </div>
         {isDataSource ? (
           <div>
-            <TableList count={count} xeroUrl={xeroUrl} />
+            <TableList count={count} xeroUrl={xeroUrl} userInfo={userData} isLoggedIn={isLoggedIn} />
           </div>
         ): (
             <div>
-                <Integrations/>
+                <Integrations xeroUrl={xeroUrl} search={search}/>
             </div>
         )}
       </div>

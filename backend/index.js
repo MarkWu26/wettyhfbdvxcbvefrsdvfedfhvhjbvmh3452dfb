@@ -10,6 +10,7 @@ import {Issuer} from 'openid-client'
 import config from './config.json' assert { type: 'json' };
 import {dirname} from 'path'
 import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser'
 
 
 const client_id = config.CLIENT_ID;
@@ -40,6 +41,7 @@ const __dirname = dirname(__filename);
         cookie: { secure: false }
     }));
     app.use(express.json())
+    app.use(cookieParser())
 
     const issuer = await Issuer.discover('https://identity.xero.com');  //The one URL which allows the app to discover all the other URLs for OAuth  
 
@@ -75,8 +77,13 @@ const __dirname = dirname(__filename);
         // authorisation server back to the redirect URI with these query params:
         //     code - the authorization code
         //     state - the state parameter sent in the original request.
+        
+        console.log('the req code is: ', req.query.error)
 
         try {
+            if(req.query.error){
+                return res.redirect('http://localhost:5173')
+            }
             client.CLOCK_TOLERANCE = 5; // to allow a 5 second skew, this helps prevent errors thrown by openid-client server clock validations
             Issuer.defaultHttpOptions = {};
             //POST request to the authorization server with the following parameters:
@@ -101,7 +108,8 @@ const __dirname = dirname(__filename);
                 console.log('\nOAuth successful...\n\naccess token: \n' + accessToken + '\n')
                 let idToken = token.id_token
                 console.log('\id token: \n' + idToken + '\n')
-                console.log('\nid token claims: \n' + JSON.stringify(token.claims, null, 2));
+                let claims = JSON.stringify(token.claims, null, 2);
+                req.session.claims = claims
                 let refreshToken = token.refresh_token
                 console.log('\nrefresh token: \n' + refreshToken)
                 req.session.save()
@@ -134,27 +142,7 @@ const __dirname = dirname(__filename);
                         res.redirect('http://localhost:5173/data-manager')
                     })
 
-                    var executiveReportsOptions = {
-                        url: 'https://api.xero.com/api.xro/2.0/Reports/ExecutiveSummary',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            'xero-tenant-id': req.session.xeroTenantId
-                        },
-                        auth: {
-                            'bearer': req.session.accessToken
-                        }
-                    }
-            
-                    request.get(executiveReportsOptions, function (error, response, body) {
-                        if (error) {
-                            console.log('error from executiveReports: ' + error)
-                        }
-            
-                          /* result = body */
-                        console.log('body: ' + body)
-                        
-                    })
+                    
                    
                 })
     
@@ -165,15 +153,16 @@ const __dirname = dirname(__filename);
                 res.status(500).send('Internal Server Error');
             }
         } catch (e) {
+            console.log('hahah')
             console.log('ERROR: ' + e)
         }
 
     })
 
     app.get('/getAuth',  function (req, res) {
-       console.log('trying to send')
-        res.status(200).json({token: req.session.accessToken, id: req.session.xeroTenantId})
-       console.log({token: req.session.accessToken, id: req.session.xeroTenantId})
+  
+       let tokenClaims = req.session.claims;
+        res.status(200).json({userInfo: tokenClaims })
     })
 
 
@@ -247,7 +236,7 @@ const __dirname = dirname(__filename);
                 console.log('error from organisationRequest: ' + error)
             }
             console.log('body: ' + body)
-            res.redirect('/home')
+            res.json({body})
         })
     })
 
@@ -315,6 +304,25 @@ const __dirname = dirname(__filename);
             res.redirect('/home')
         }
     })
+
+    app.get('/logout', (req, res) => {
+        console.log('logging out...')
+        try {
+            req.session.destroy(function(err){
+                if(err){
+                   console.log(err);
+                }else{
+                    req.session = null
+                     res.clearCookie('connect.sid', {domain: 'localhost', path: '/'}).status(200).json({succes: true})
+                }
+             });
+              
+              // Redirect to login page or any other page after destroying the session
+        } catch (error) {
+            console.log('ERROR: ', error)
+        }
+     
+      });
 
     app.listen(app.get('port'), function () {
         console.log("Your Xero OAuth2 app is running at http://localhost:" + app.get('port'))
